@@ -46,6 +46,7 @@ Last updated: 2026-10-09 by Claude Code (cloud session "determined-newton").
   modes, 12 language alphabets with density sorting, colour, braille, dither, edges, GIF/video.
 - `E6` Fun and widgets (misty-ascii): matrix rain with every cmatrix option (own code), astroterm
   sky (own constellation data), FTXUI canvas primitives, spinners.
+- `E8` Diagrams in the engine (misty-ascii): all 9 Diagon translators behind `misty-ascii diagram`, so CLIs get them too (Kate gets them first via `K1`).
 - `E7` Colour output: ANSI (16/256/truecolor) + HTML export, ANSI viewer.
 - `K2` Kate: tables, lists, reformatter UI. `K3` Kate: charts UI. `K4` Kate: fonts, gallery,
   banners, ANSI viewer. `K5` Kate: images/video. `K6` Kate: ASCII paint mode, art library, idle
