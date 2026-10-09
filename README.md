@@ -36,8 +36,13 @@ Contract for callers (Go, Node, Python, shell): art on stdout, errors on stderr,
 (auto honours `NO_COLOR`, `FORCE_COLOR`, `COLORTERM` and is off when piped), `--ascii` for
 plain 7-bit output, `--width N` else `$COLUMNS`, the terminal, or 80.
 
-macOS: start the binary through a shell (`sh misty table ...`) when calling it from Go, Node or
-anything using `posix_spawn()`; interactive shells already do this.
+Linux/macOS callers that spawn without a shell (Python `subprocess`, Go, Node): if starting
+`misty` fails with "exec format error", run `sh misty ...` instead; interactive shells already
+do this. Windows runs `misty.exe` directly.
+
+Python (Hermes, Misty OS, Misty Control): copy `bindings/python/misty_ascii.py` (standard
+library only). `table()`, `chart()`, `spark()`, `bar()`, `colorize()`, `gradient()` return
+text and fall back to plain rendering when the binary is missing, so callers never break.
 
 Use as a CMake subproject: `add_subdirectory(misty-ascii)` then link `misty::ascii`
 (the CLI and tests are off by default in that case).

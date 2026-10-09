@@ -74,8 +74,10 @@ Everything else uses it:
   read source from stdin, pass a file.
 - Windows: Cosmopolitan reports `exit(n)` to Windows parents as `n << 8`; the CLI calls
   `ExitProcess(n)` itself on Windows (`finish()` in `cli/main.cpp`). Keep that when adding exits.
-- macOS: `posix_spawn()` (CMake, Go `exec.Command`, Node `execFile`) cannot start an APE file
-  directly; shells and `execvp()` fall back to running it as a script. Callers on macOS run
-  `sh misty ...` (or install the `ape` loader). CI tests macOS with `-DMISTY_ASCII_TEST_LAUNCHER=sh`.
+- Linux and macOS: `execve`/`posix_spawn` (Python `subprocess`, Go `exec.Command`, Node
+  `execFile`, CMake on macOS) cannot start an APE file directly (ENOEXEC) unless the `ape`
+  loader is installed; shells and `execvp()` fall back to running it as a script. Callers run
+  `sh misty ...` on ENOEXEC; `bindings/python/misty_ascii.py` does this automatically. CI tests
+  macOS with `-DMISTY_ASCII_TEST_LAUNCHER=sh`. Windows runs `misty.exe` natively.
 - Golden tests: `MISTY_UPDATE_GOLDEN=1 ctest` rewrites `tests/golden/*.out`; read every diff
   before committing. `-DMISTY_ASCII_TEST_BINARY=dist/misty` runs them against the APE binary.
