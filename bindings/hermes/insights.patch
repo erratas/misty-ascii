@@ -1,0 +1,94 @@
+--- a/agent/insights.py
++++ b/agent/insights.py
+@@ -13,6 +13,11 @@
+ from hermes_cli.timefmt import coerce_epoch
+ from hermes_time import safe_strftime
+ 
++try:  # Misty ASCII engine (misty-ascii repo); every call falls back to plain text without it
++    from agent import misty_ascii as _misty
++except Exception:  # noqa: BLE001
++    _misty = None
++
+ _TOKEN_KEYS = ("input_tokens", "output_tokens", "cache_read_tokens", "cache_write_tokens")
+ _SKILL_TOOLS = {"skill_view", "skill_manage"}
+ 
+@@ -46,6 +51,18 @@
+     return ["" for _ in values] if peak == 0 else ["█" * max(1, int(v / peak * max_width)) if v > 0 else "" for v in values]
+ 
+ 
++def _misty_on() -> bool:
++    try:
++        return _misty is not None and _misty.available()
++    except Exception:  # noqa: BLE001
++        return False
++
++
++def _indent(block: str) -> List[str]:
++    """Engine output as report lines, indented two spaces like the rest of the report."""
++    return [("  " + l) if l else l for l in block.rstrip("\n").split("\n")]
++
++
+ def _short_model(model: Optional[str]) -> str:
+     """Display name: strip the provider prefix; empty → "unknown"."""
+     return (model or "unknown").split("/")[-1]
+@@ -430,7 +447,9 @@
+             for prev, cur in zip(dates, dates[1:]):
+                 current_streak = current_streak + 1 if (cur - prev).days == 1 else 1
+                 max_streak = max(max_streak, current_streak)
+-        return {"by_day": day_breakdown, "by_hour": hour_breakdown, "busiest_day": max(day_breakdown, key=lambda x: x["count"]),
++        by_date = [{"date": d, "count": daily_counts[d]} for d in sorted(daily_counts)]
++        return {"by_day": day_breakdown, "by_hour": hour_breakdown, "by_date": by_date,
++                "busiest_day": max(day_breakdown, key=lambda x: x["count"]),
+                 "busiest_hour": max(hour_breakdown, key=lambda x: x["count"]), "active_days": len(daily_counts), "max_streak": max_streak}
+ 
+     _TOP_METRICS = (
+@@ -506,14 +525,25 @@
+                                           "  Unknown:            {} session(s) (no pricing data)"))
+         if cost_lines:
+             lines += self._section("💰 Cost") + cost_lines + [""]
+-        if report["models"]:
++        misty = _misty_on()
++        if report["models"] and misty:
++            rows = [["Model", "Sessions", "Tokens"]] + [[m["model"][:40], m["sessions"], f"{m['total_tokens']:,}"] for m in report["models"]]
++            lines += self._section("🤖 Models Used") + _indent(_misty.table(rows, style="rounded")) + [""]
++        elif report["models"]:
+             lines += self._section("🤖 Models Used") + [f"  {'Model':<30} {'Sessions':>8} {'Tokens':>12}"]
+             lines += [f"  {m['model'][:28]:<30} {m['sessions']:>8} {m['total_tokens']:>12,}" for m in report["models"]] + [""]
+         platforms = report["platforms"]
+         if len(platforms) > 1 or (platforms and platforms[0]["platform"] != "cli"):
+             lines += self._section("📱 Platforms") + [f"  {'Platform':<14} {'Sessions':>8} {'Messages':>10} {'Tokens':>14}"]
+             lines += [f"  {p['platform']:<14} {p['sessions']:>8} {p['messages']:>10,} {p['total_tokens']:>14,}" for p in platforms] + [""]
+-        if report["tools"]:
++        if report["tools"] and misty:
++            top = report["tools"][:15]
++            lines += self._section("🔧 Top Tools")
++            lines += _indent(_misty.bar([f"{t['tool'][:28]} ({t['percentage']:.0f}%)" for t in top], [t["count"] for t in top], width=26))
++            if len(report["tools"]) > 15:
++                lines.append(f"  ... and {len(report['tools']) - 15} more tools")
++            lines.append("")
++        elif report["tools"]:
+             lines += self._section("🔧 Top Tools") + [f"  {'Tool':<28} {'Calls':>8} {'%':>8}"]
+             lines += [f"  {t['tool']:<28} {t['count']:>8,} {t['percentage']:>7.1f}%" for t in report["tools"][:15]]
+             if len(report["tools"]) > 15:
+@@ -532,8 +562,19 @@
+         act = report.get("activity", {})
+         if act.get("by_day"):
+             lines += self._section("📅 Activity Patterns")
+-            bars = _bar_chart([d["count"] for d in act["by_day"]], max_width=15)
+-            lines += [f"  {d['day']}  {bar:<15} {d['count']}" for bar, d in zip(bars, act["by_day"])] + [""]
++            if misty:
++                daily = act.get("by_date") or []
++                if len(daily) >= 2:
++                    lines += _indent(_misty.chart([d["count"] for d in daily], height=6, precision=0,
++                                                  caption=f"sessions per day, {daily[0]['date']} to {daily[-1]['date']}")) + [""]
++                lines += _indent(_misty.bar([d["day"] for d in act["by_day"]], [d["count"] for d in act["by_day"]], width=26))
++                hours = [h["count"] for h in sorted(act.get("by_hour", []), key=lambda h: h["hour"])]
++                if len(hours) == 24 and any(hours):
++                    lines += ["", "  Hours  " + _misty.spark(hours), "         0     6     12    18   23"]
++                lines.append("")
++            else:
++                bars = _bar_chart([d["count"] for d in act["by_day"]], max_width=15)
++                lines += [f"  {d['day']}  {bar:<15} {d['count']}" for bar, d in zip(bars, act["by_day"])] + [""]
+             busy_hours = [h for h in sorted(act["by_hour"], key=lambda x: x["count"], reverse=True) if h["count"] > 0][:5]
+             if busy_hours:
+                 hour_strs = [f"{_hour12(h['hour'])} ({h['count']})" for h in busy_hours]
