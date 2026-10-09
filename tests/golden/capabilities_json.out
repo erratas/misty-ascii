@@ -1,0 +1,1 @@
+{"ok":true,"version":"0.1.0","subcommands":["table","chart","spark","bar","color","gradient","capabilities"],"planned":["banner","diagram","fonts","image","rain","sky"],"table_styles":["default","light","rounded","bold","double","ascii","none"],"table_formats":["text","markdown","csv","tsv","html"],"color_modes":["auto","never","16","256","truecolor"],"colors":148,"fonts":[]}

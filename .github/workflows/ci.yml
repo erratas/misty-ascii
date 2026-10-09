@@ -1,0 +1,74 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux build + tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  cosmo:
+    name: Cosmopolitan portable binary
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache cosmocc
+        uses: actions/cache@v4
+        with:
+          path: .cosmocc
+          key: cosmocc-${{ runner.os }}-v1
+      - name: Build misty with cosmoc++
+        run: scripts/build-cosmo.sh dist
+      - name: Golden tests against the portable binary
+        run: |
+          cmake -S . -B build-cosmo -DMISTY_ASCII_BUILD_CLI=OFF -DMISTY_ASCII_BUILD_TESTS=ON \
+            -DMISTY_ASCII_TEST_BINARY="$PWD/dist/misty"
+          cmake --build build-cosmo -j
+          ctest --test-dir build-cosmo --output-on-failure
+      - uses: actions/upload-artifact@v4
+        with:
+          name: misty-portable
+          path: |
+            dist/misty
+            dist/misty.exe
+          if-no-files-found: error
+
+  portable:
+    name: Portable binary on ${{ matrix.os }}
+    needs: cosmo
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: misty-portable
+          path: dist
+      - name: Golden tests against the same binary
+        shell: bash
+        run: |
+          chmod +x dist/misty || true
+          if [ "$RUNNER_OS" = "Windows" ]; then BIN="$(pwd -W)/dist/misty.exe"; else BIN="$PWD/dist/misty"; fi
+          "$BIN" --version
+          cmake -S . -B build-portable -DMISTY_ASCII_BUILD_CLI=OFF -DMISTY_ASCII_BUILD_TESTS=ON \
+            -DMISTY_ASCII_TEST_BINARY="$BIN"
+          cmake --build build-portable --config Release
+          ctest --test-dir build-portable -C Release --output-on-failure

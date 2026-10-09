@@ -9,10 +9,10 @@ are rebuilt from scratch, so nothing of theirs is included.
 | Diagon (Arthur Sonzogni) | MIT | Diagram translators (math, sequence, tree, table, frame, graphs, flowchart, grammar) |
 | ANTLR 4 runtime | BSD-3-Clause | Parser runtime used by Diagon |
 | FTXUI (Arthur Sonzogni) | MIT | Borders, gauges, spinners, canvas primitives, layout |
-| go-pretty (jedib0t) | MIT | Table, list, progress and text features |
-| asciichart (Igor Kroitor) | MIT | Line chart algorithm |
+| go-pretty (Copyright (c) 2018 jedib0t) | MIT | Table, list, progress and text feature set (rebuilt, no code copied) |
+| asciichart (Copyright (c) 2016 Igor Kroitor) | MIT | Line chart algorithm, ported in `src/chart.cpp`; licence text in [`licenses/asciichart-MIT.txt`](licenses/asciichart-MIT.txt) |
 | asciichart C++ (Civitasv) | MIT | Chart legends and styles |
-| asciigraph (Rohit Gupta) | BSD-3-Clause | Chart options |
+| asciigraph (Copyright (c) 2018, Rohit Gupta) | BSD-3-Clause | Chart options, caption and legend layout (rebuilt, no code copied) |
 | asciigraph-rs (Rohit Gupta) | BSD-3-Clause | Chart extras (thresholds, statistics) |
 | ascii-art (codewithnick) | MIT | 11 banner fonts |
 | ascii-view (Xander Gouws) | MIT | Image ramp, Sobel edges |
