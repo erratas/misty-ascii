@@ -72,3 +72,10 @@ Everything else uses it:
   (`-DANTLR_BUILD_CPP_TESTS=OFF`) or the GoogleTest download fails behind the proxy.
 - Cosmopolitan: `cosmocc` from https://cosmo.zip/pub/cosmocc/cosmocc.zip; `cosmoc++` does not
   read source from stdin, pass a file.
+- Windows: Cosmopolitan reports `exit(n)` to Windows parents as `n << 8`; the CLI calls
+  `ExitProcess(n)` itself on Windows (`finish()` in `cli/main.cpp`). Keep that when adding exits.
+- macOS: `posix_spawn()` (CMake, Go `exec.Command`, Node `execFile`) cannot start an APE file
+  directly; shells and `execvp()` fall back to running it as a script. Callers on macOS run
+  `sh misty ...` (or install the `ape` loader). CI tests macOS with `-DMISTY_ASCII_TEST_LAUNCHER=sh`.
+- Golden tests: `MISTY_UPDATE_GOLDEN=1 ctest` rewrites `tests/golden/*.out`; read every diff
+  before committing. `-DMISTY_ASCII_TEST_BINARY=dist/misty` runs them against the APE binary.

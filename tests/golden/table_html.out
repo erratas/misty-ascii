@@ -1,0 +1,37 @@
+<table class="misty-table">
+  <caption>People</caption>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>City</th>
+    <th align="right">Age</th>
+    <th align="right">Score</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>Alice</td>
+    <td>Paris</td>
+    <td align="right">34</td>
+    <td align="right">91.5</td>
+  </tr>
+  <tr>
+    <td>Bob</td>
+    <td>New York, NY</td>
+    <td align="right">27</td>
+    <td align="right">78</td>
+  </tr>
+  <tr>
+    <td>Chloé</td>
+    <td>東京</td>
+    <td align="right">45</td>
+    <td align="right">88.25</td>
+  </tr>
+  <tr>
+    <td>Dan</td>
+    <td>Oslo</td>
+    <td align="right">19</td>
+    <td align="right">100</td>
+  </tr>
+  </tbody>
+</table>

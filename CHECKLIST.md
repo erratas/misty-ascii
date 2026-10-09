@@ -20,22 +20,30 @@ Those move into the engine under `K0` and gain all their options below.
 
 ## E1 Engine core + Cosmopolitan CLI
 
-- [ ] Library layout: `include/misty/ascii/*.h`, `src/`, no Qt dependency, C++17
-- [ ] Unicode width handling (East Asian wide, combining marks, emoji) [go-pretty text]
-- [ ] ANSI escape awareness: strip, measure without escapes [go-pretty text]
-- [ ] Colour model: 16 / 256 / truecolor, named colours, hex, HSV, gradient interpolation
+- [x] Library layout: `include/misty/ascii.hpp` (one header, per the engine design), `src/`, no Qt
+      dependency, C++17; works as a CMake subproject (`misty::ascii`)
+- [x] Unicode width handling (East Asian wide, combining marks, emoji) [go-pretty text]
+- [x] ANSI escape awareness: strip, measure without escapes (CSI and OSC) [go-pretty text]
+- [x] Colour model: 16 / 256 / truecolor, named colours, hex, HSV, gradient interpolation
       [cfonts, FTXUI, go-pretty]; honour `NO_COLOR`, `FORCE_COLOR`
 - [ ] Output targets: plain text, ANSI, HTML (inline styles and CSS classes), Markdown
-- [ ] `misty-ascii` CLI with subcommands (`table`, `chart`, `banner`, `diagram`, `image`, `list`,
-      `progress`, `matrix`, `sky`, `fonts`), `--help` for each, reads stdin or files
-- [ ] Cosmopolitan build (`cosmoc++`) produces one portable binary; plain CMake build too
-- [ ] Test harness (golden-file tests) + CI on GitHub Actions
+      (done for tables: text, ANSI colour, HTML with CSS class, Markdown; generic ANSI to HTML
+      export is E7)
+- [ ] `misty` CLI (binary renamed per the engine design) with subcommands, `--help` for each,
+      reads stdin or files. Done: `table chart spark bar color gradient capabilities`, `--json`,
+      exit codes, `--color`, `--ascii`, `--width`. Planned ones exit 3: `banner fonts image rain
+      sky diagram`; `list` and `progress` not wired yet
+- [x] Cosmopolitan build (`cosmoc++`) produces one portable binary; plain CMake build too
+      (`scripts/build-cosmo.sh`; 40/40 golden tests pass against the APE binary on Linux)
+- [x] Test harness (golden-file tests) + CI on GitHub Actions (40 ctest cases; one APE binary
+      passes them on Linux, Windows and macOS runners)
 - [ ] Release: attach the portable binary to GitHub releases
 
 ## E2 Tables, lists, text
 
 Tables [go-pretty table, Diagon Table, ASCII-Data, FTXUI table]:
 - [ ] Input: CSV, TSV, any delimiter, Markdown table, JSON array, aligned text
+      (done: CSV with RFC 4180 quotes, TSV, any delimiter + detection, Markdown)
 - [ ] go-pretty styles: Default, Bold, Double, Light, Rounded, ColoredBright, ColoredDark,
       ColoredBlackOn{Blue,Cyan,Green,Magenta,Yellow,Red}White,
       Colored{Blue,Cyan,Green,Magenta,Red,Yellow}WhiteOnBlack
@@ -47,20 +55,20 @@ Tables [go-pretty table, Diagon Table, ASCII-Data, FTXUI table]:
       ascii light separator/border, ascii light border, conceptual
 - [ ] ASCII-Data formats (ASCII `+-=|`, UTF8 double with row separators), null value text
 - [ ] Options: draw border, separate columns/header/footer/rows, hide separators when empty
-- [ ] Header, footer, title (with align), caption
+- [ ] Header, footer, title (with align), caption (done, title always centred)
 - [ ] Auto-index (row numbers + column letters), index column
 - [ ] Per-column: align (left, center, right, justify, auto), vertical align, header/footer
       align, colours, hidden, width min/max, wrap (text, soft, hard, trim), transformers
 - [ ] Transformers: number, JSON, time, unix time, URL; header case upper/lower/title
 - [ ] Auto-merge cells vertically and horizontally (with merge alignment)
 - [ ] Sorting: asc, asc alpha-numeric, asc numeric, asc numeric-alpha, and the 4 descending;
-      ignore case; multiple sort keys
+      ignore case; multiple sort keys (done: asc, dsc, asc/dsc numeric, one key)
 - [ ] Filtering: =, !=, >, >=, <, <=, contains, not contains, starts with, ends with, regex,
       not regex; ignore case
 - [ ] Suppress empty columns, suppress trailing spaces, allowed row length, paging
 - [ ] Colours: header, rows, alternate rows, footer, border, separator, index column
 - [ ] Output: text, CSV (with formula-injection guard), TSV, HTML (CSS class, escape, colours to
-      spans), Markdown (padded content)
+      spans), Markdown (padded content) (all done except colours to spans)
 - [ ] Table reformatter: realign an existing messy table in place, any style
 
 Lists [go-pretty list]:
@@ -92,19 +100,21 @@ Text helpers [go-pretty text, FTXUI paragraph]:
 ## E3 Charts
 
 [asciichart, asciichart1, asciigraph, asciigraph-rs, ASCII-Data, FTXUI]
-- [ ] Line chart, one or many series, auto range
-- [ ] Height, width (resampling), offset, padding
-- [ ] Min/max (lower/upper bound), precision, Y formatter
+- [x] Line chart, one or many series, auto range
+- [ ] Height, width (resampling), offset, padding (done except padding)
+- [ ] Min/max (lower/upper bound), precision, Y formatter (done except Y formatter)
 - [ ] Custom symbol sets, single-character plots
-- [ ] Series colours, axis colour, label colour, caption colour
+- [ ] Series colours, axis colour, label colour, caption colour (done: series colours)
 - [ ] Caption, legends (with padding), X axis range / tick count / formatter, axis labels
+      (done: caption, legends)
 - [ ] Gradient/heatmap colouring, colour above/below threshold
 - [ ] Zero line, threshold lines (dashed), moving average
 - [ ] Statistics annotations: min, max, mean, median, plus/minus sigma
-- [ ] Gaps for missing values (NaN)
+- [x] Gaps for missing values (NaN)
 - [ ] Streaming / realtime mode with buffer and FPS; animation by redraw
 - [ ] Input: numbers from text, CSV columns, delimiter, series count
 - [ ] Function graph [FTXUI graph]; sparklines; bar charts; braille-resolution plots
+      (done: sparklines, horizontal bar charts with eighth blocks)
 
 ## E4 Fonts and banners
 

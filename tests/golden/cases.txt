@@ -1,0 +1,40 @@
+# name | stdin file in data/ (or -) | expected exit code | arguments (space separated)
+table_light        | people.csv | 0 | table
+table_rounded_sort | people.csv | 0 | table --style rounded --sort 3 --dsc --numeric --title People --caption Four_rows --index
+table_double_md_in | sales.md   | 0 | table --style double --footer
+table_none         | people.csv | 0 | table --style none
+table_noborder     | people.csv | 0 | table --style bold --no-border
+table_ascii_wrap   | people.csv | 0 | table --style ascii --max-width 0,5 --hide 4
+table_default_rows | people.csv | 0 | table --style default --separate-rows --align c,l,r,l
+table_markdown     | people.csv | 0 | table --format markdown
+table_csv          | people.csv | 0 | table --format csv
+table_tsv          | people.csv | 0 | table --format tsv
+table_html         | people.csv | 0 | table --format html --title People
+table_json         | people.csv | 0 | table --json --style ascii
+table_unicode_ascii| people.csv | 0 | table --ascii
+table_sort_alpha   | people.csv | 0 | table --sort 2
+chart_ramp         | ramp.txt   | 0 | chart --height 6
+chart_two          | two.txt    | 0 | chart --height 8 --legend pi,e --caption two_series
+chart_gaps         | gaps.txt   | 0 | chart --height 4
+chart_resample     | two.txt    | 0 | chart --height 5 --width 30
+chart_ascii        | ramp.txt   | 0 | chart --height 3 --ascii
+chart_color        | ramp.txt   | 0 | chart --height 3 --colors red --color 256
+chart_precision    | ramp.txt   | 0 | chart --height 3 --precision 0 --min 0 --max 10
+spark_args         | -          | 0 | spark 1 5 2 8 3 9 4
+spark_file         | ramp.txt   | 0 | spark
+spark_json         | ramp.txt   | 0 | spark --json
+bar_fruit          | fruit.txt  | 0 | bar
+bar_narrow_ascii   | fruit.txt  | 0 | bar --width 10 --ascii
+color_16           | -          | 0 | color red hello --color 16
+color_true_bg      | -          | 0 | color #336699 hi --bg white --color truecolor
+color_piped_plain  | -          | 0 | color red hello
+gradient_true      | -          | 0 | gradient --stops red,blue misty --color truecolor
+gradient_256       | -          | 0 | gradient misty --color 256
+capabilities_json  | -          | 0 | capabilities --json
+version            | -          | 0 | --version
+err_unknown_option | -          | 2 | table --bogus
+err_bad_color      | -          | 2 | color notacolour hi --json
+err_no_numbers     | words.txt  | 1 | chart --json
+err_planned        | -          | 3 | banner hi --json
+err_bad_style      | people.csv | 2 | table --style wavy
+err_missing_file   | -          | 1 | table /nonexistent.csv --json
