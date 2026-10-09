@@ -26,6 +26,17 @@ Last updated: 2026-10-09 by Claude Code (cloud session "engine-core", after "det
   Left: release upload, E2 lists/trees/progress/text
   helpers/filters/colours, E3 axis extras, thresholds, statistics, streaming, braille plots.
 
+- `I0` **Integrate the engine everywhere** (owner, 2026-10-09: Hermes CLI and reports, Misty OS
+  GUI, Misty Control, every terminal; keep a local copy in `_BRIDGE/CODES LOL`). Done so far:
+  Python helper `bindings/python/misty_ascii.py` (erratas/misty-ascii#3); `misty.exe` installed
+  in `~/.hermes/bin` on E15; Hermes `/insights` draws with the engine (patch applied locally,
+  copy in `bindings/hermes/insights.patch`, backup `insights.py.bak-mistyascii-20261009`);
+  Hermes skill `~/.hermes/skills/misty-ascii`; Misty OS `/api/ascii/*` routes with
+  write-to-canvas (erratas/misty-os#3, local checkout on that branch). Left: a GUI panel and
+  Misty Control buttons that call the route, `status_report`/`doctor_report` charts, the
+  standalone Misty Control page (`_BRIDGE/MISTY-ONE`, not in git), Venus install, the other
+  CLIs, MCP `canvas_write` (C1).
+
 ## Next (in order)
 
 1. **Master board catch-up** (misty-ascii): per-repo board links (misty-os#2, kate#2), card
@@ -87,3 +98,8 @@ One line per session, newest last: `date | who | what changed | what failed | wh
   runs of the same binary, all green (erratas/misty-ascii#2) | fixed upstream asciichart
   off-by-one-row rounding; Windows exit codes came back n<<8 and macOS cannot posix_spawn an
   APE file (both fixed/documented); B1 not resumed (container gone) | board catch-up, then B1, then K0.
+- 2026-10-09 | Claude Code cloud (engine-core) | I0: Python helper, Hermes /insights charts +
+  skill + binary on E15, Misty OS /api/ascii routes; local copies in `_BRIDGE/CODES LOL` |
+  Python subprocess cannot exec APE on Linux/macOS (helper retries via sh); E15 VM has no
+  GitHub creds for private misty-os (moved the commit with a git bundle) | GUI panel, Misty
+  Control buttons, Venus.
