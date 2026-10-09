@@ -35,7 +35,8 @@ Those move into the engine under `K0` and gain all their options below.
       sky diagram`; `list` and `progress` not wired yet
 - [x] Cosmopolitan build (`cosmoc++`) produces one portable binary; plain CMake build too
       (`scripts/build-cosmo.sh`; 40/40 golden tests pass against the APE binary on Linux)
-- [ ] Test harness (golden-file tests) + CI on GitHub Actions
+- [x] Test harness (golden-file tests) + CI on GitHub Actions (40 ctest cases; one APE binary
+      passes them on Linux, Windows and macOS runners)
 - [ ] Release: attach the portable binary to GitHub releases
 
 ## E2 Tables, lists, text

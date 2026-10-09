@@ -22,7 +22,8 @@ Last updated: 2026-10-09 by Claude Code (cloud session "engine-core", after "det
 
 - `E1` + `E2` (tables part) + `E3` (core charts) **Engine core + `misty` CLI** (misty-ascii,
   erratas/misty-ascii#2, draft, stacked on #1). Library, CLI, 40 ctest cases, cosmocc build, CI.
-  Left: CI green on Windows/macOS (portable job), release upload, E2 lists/trees/progress/text
+  CI green: Linux, cosmocc, and the same binary on Windows + macOS (40/40 each).
+  Left: release upload, E2 lists/trees/progress/text
   helpers/filters/colours, E3 axis extras, thresholds, statistics, streaming, braille plots.
 
 ## Next (in order)
@@ -83,5 +84,6 @@ One line per session, newest last: `date | who | what changed | what failed | wh
   then E1.
 - 2026-10-09 | Claude Code cloud (engine-core) | E1-E3 core: library + `misty` CLI + 40 ctest
   cases + cosmocc APE binary (40/40 goldens pass on it, ~3 ms start) + CI with Windows/macOS
-  runs of the same binary (erratas/misty-ascii#2) | fixed upstream asciichart off-by-one-row
-  rounding; B1 not resumed (container gone) | board catch-up, then B1, then K0.
+  runs of the same binary, all green (erratas/misty-ascii#2) | fixed upstream asciichart
+  off-by-one-row rounding; Windows exit codes came back n<<8 and macOS cannot posix_spawn an
+  APE file (both fixed/documented); B1 not resumed (container gone) | board catch-up, then B1, then K0.
