@@ -22,7 +22,6 @@ import math
 import os
 import shutil
 import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
@@ -214,11 +213,11 @@ def _fallback_table(rows: list[list[str]], header: bool) -> str:
 
 def _fallback_bar(labels: Sequence[str], values: Sequence[float], width: int) -> str:
     peak = max([v for v in values if not _isnan(v)] + [0])
-    lw = max((len(str(l)) for l in labels), default=0)
+    lw = max((len(str(lab)) for lab in labels), default=0)
     out = []
-    for l, v in zip(labels, values):
+    for lab, v in zip(labels, values):
         n = 0 if peak <= 0 or _isnan(v) or v <= 0 else max(1, round(v / peak * width))
-        out.append(f"{str(l).ljust(lw)} │{'█' * n}{' ' * (width - n + 1)}{v:g}")
+        out.append(f"{str(lab).ljust(lw)} │{'█' * n}{' ' * (width - n + 1)}{v:g}")
     return "\n".join(out) + "\n"
 
 
@@ -299,8 +298,8 @@ def bar(labels: Sequence[str], values: Sequence[float], *, width: int = 30,
     """Horizontal bar chart, one 'label value' row per item."""
     if not values:
         return ""
-    labels = [str(l).replace("\n", " ") or str(i + 1) for i, l in enumerate(labels)]
-    text = "".join(f"{l} {_num(v)}\n" for l, v in zip(labels, values))
+    labels = [str(lab).replace("\n", " ") or str(i + 1) for i, lab in enumerate(labels)]
+    text = "".join(f"{lab} {_num(v)}\n" for lab, v in zip(labels, values))
     args = ["--width", str(width)] + _color_args(color)
     if colors:
         args += ["--colors", ",".join(colors)]
