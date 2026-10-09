@@ -15,6 +15,10 @@ elseif(TARGET misty)
   set(misty_under_test "$<TARGET_FILE:misty>")
 endif()
 
+# Optional program that runs the binary, e.g. "sh" on macOS, where posix_spawn() cannot start
+# an APE file directly (shells and execvp() fall back to running it as a script; CMake does not).
+set(MISTY_ASCII_TEST_LAUNCHER "" CACHE STRING "launcher for the misty binary in golden tests")
+
 if(misty_under_test)
   # Each line of golden/cases.txt: name | input file (or -) | expected exit | args...
   # Expected stdout lives in golden/<name>.out. Regenerate with MISTY_UPDATE_GOLDEN=1 ctest.
@@ -39,6 +43,7 @@ if(misty_under_test)
     add_test(NAME golden_${name}
       COMMAND ${CMAKE_COMMAND}
         -DMISTY=${misty_under_test}
+        -DLAUNCHER=${MISTY_ASCII_TEST_LAUNCHER}
         -DARGS=${args}
         -DINPUT=${input}
         -DCODE=${code}

@@ -6,7 +6,7 @@ stop: move your card, add the PR link and blockers, and add a line to the Sessio
 Card format: `ID` title (repo). `[owner]` = needs the human. Checklists for every card live in
 [`CHECKLIST.md`](CHECKLIST.md) under the same ID.
 
-Last updated: 2026-10-09 by Claude Code (cloud session "determined-newton").
+Last updated: 2026-10-09 by Claude Code (cloud session "engine-core", after "determined-newton").
 
 ---
 
@@ -20,21 +20,22 @@ Last updated: 2026-10-09 by Claude Code (cloud session "determined-newton").
 
 ## In progress
 
-- `B1` **Kate dev build in the cloud container** (`/home/user/.kdebuild`). KF 6.31: 24 of 32
-  frameworks built (2026-10-09 20:19 UTC, now on kbookmarks). Then build Kate itself.
-- `E0` **Bootstrap this repo**: AGENTS.md, KANBAN.md, CHECKLIST.md, CREDITS.md (this PR).
+- `E1` + `E2` (tables part) + `E3` (core charts) **Engine core + `misty` CLI** (misty-ascii,
+  erratas/misty-ascii#2, draft, stacked on #1). Library, CLI, 40 ctest cases, cosmocc build, CI.
+  Left: CI green on Windows/macOS (portable job), release upload, E2 lists/trees/progress/text
+  helpers/filters/colours, E3 axis extras, thresholds, statistics, streaming, braille plots.
 
 ## Next (in order)
 
-1. `E1` **Engine core + Cosmopolitan CLI** (misty-ascii): C++ library skeleton, `misty-ascii`
-   CLI, cosmocc build, test harness, CI.
-2. `E2` **Tables, lists, text** (misty-ascii): everything from go-pretty + Diagon tables +
-   ASCII-Data + FTXUI borders, all output formats, table reformatter.
-3. `E3` **Charts** (misty-ascii): every option from asciichart, asciichart1, asciigraph,
-   asciigraph-rs, plus FTXUI gauges/spinners/graph.
-4. `K1` **Kate: Diagon diagrams bundled in the plugin** (kate): all 9 translators, live preview
+1. **Master board catch-up** (misty-ascii): per-repo board links (misty-os#2, kate#2), card
+   `R1` (rename Kate to Misty), copy ideas `I1`-`I35` from kate `KANBAN.md`.
+2. `B1` dev build of the editor. The previous container (KF 6.31, 24 of 32 frameworks built)
+   is gone; rebuild from scratch per kate `AGENTS.md` section 4.
+3. `E2` rest: lists, trees, progress, text helpers, filters, colours, reformatter.
+4. `E3` rest: axis labels/ticks, thresholds, statistics, streaming, braille plots.
+5. `K1` **Kate: Diagon diagrams bundled in the plugin** (kate): all 9 translators, live preview
    pane, render-in-place blocks. Needs `B1`.
-5. `K0` **Kate: switch asciifun to the shared engine** (kate): the existing chart/banner/table/
+6. `K0` **Kate: switch asciifun to the shared engine** (kate): the existing chart/banner/table/
    image code moves into misty-ascii; plugin links the library.
 
 ## Backlog
@@ -61,6 +62,9 @@ Last updated: 2026-10-09 by Claude Code (cloud session "determined-newton").
 
 ## Done
 
+- `E0` 2026-10-09 Repo bootstrap: AGENTS.md, KANBAN.md, CHECKLIST.md, CREDITS.md
+  (erratas/misty-ascii#1, draft, awaiting owner merge).
+
 - `D1` 2026-10-09 misty-os subtab alignment + TELEMETRY rename + bottom-bar overlap fix + offline
   embed card with Retry + card style cleanup + Playwright check (erratas/misty-os#1, draft).
 - `D2` 2026-10-09 Feature inventory of all 16 source repos (summarised in CHECKLIST.md).
@@ -77,3 +81,7 @@ One line per session, newest last: `date | who | what changed | what failed | wh
   KF6 build started; cosmocc proven; this board created | KF 6.24 vs Qt 6.8 mismatch, two
   self-inflicted build restarts, GitHub refused repo creation (owner created it) | finish B1,
   then E1.
+- 2026-10-09 | Claude Code cloud (engine-core) | E1-E3 core: library + `misty` CLI + 40 ctest
+  cases + cosmocc APE binary (40/40 goldens pass on it, ~3 ms start) + CI with Windows/macOS
+  runs of the same binary (erratas/misty-ascii#2) | fixed upstream asciichart off-by-one-row
+  rounding; B1 not resumed (container gone) | board catch-up, then B1, then K0.

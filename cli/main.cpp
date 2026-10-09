@@ -26,9 +26,29 @@
 #define MISTY_ISATTY(fd) isatty(fd)
 #endif
 
+#ifdef __COSMOPOLITAN__
+#ifndef _COSMO_SOURCE
+#define _COSMO_SOURCE  // exposes IsWindows() and the NT API
+#endif
+#include <libc/dce.h>         // IsWindows()
+#include <libc/nt/runtime.h>  // ExitProcess()
+#endif
+
 namespace ma = misty::ascii;
 
 namespace {
+
+// Cosmopolitan reports exit(n) to Windows parents as n << 8 (a wait status), so cmd.exe,
+// PowerShell, Go and Node would see 512 instead of 2. Hand Windows the plain code instead.
+int finish(int code) {
+    std::cout.flush();
+    std::cerr.flush();
+    std::fflush(nullptr);
+#ifdef __COSMOPOLITAN__
+    if (IsWindows()) ExitProcess(uint32_t(code));
+#endif
+    return code;
+}
 
 enum Exit { kOk = 0, kBadInput = 1, kBadUsage = 2, kUnavailable = 3 };
 
@@ -536,8 +556,7 @@ int emit(const Args& a, const std::string& text) {
 
 }  // namespace
 
-int main(int argc, char** argv) {
-    std::ios::sync_with_stdio(false);
+static int run(int argc, char** argv) {
     bool json = false;
     for (int i = 1; i < argc; ++i)
         if (std::string(argv[i]) == "--json") json = true;
@@ -592,4 +611,9 @@ int main(int argc, char** argv) {
         if (json) std::cout << "{\"ok\":false,\"error\":\"internal error\"}\n";
         return kBadInput;
     }
+}
+
+int main(int argc, char** argv) {
+    std::ios::sync_with_stdio(false);
+    return finish(run(argc, argv));
 }

@@ -66,9 +66,13 @@ jobs:
         shell: bash
         run: |
           chmod +x dist/misty || true
+          # macOS: posix_spawn() cannot start an APE file directly; run it through sh, the
+          # same fallback every shell uses. Windows runs the PE side of misty.exe natively.
+          LAUNCHER=""
           if [ "$RUNNER_OS" = "Windows" ]; then BIN="$(pwd -W)/dist/misty.exe"; else BIN="$PWD/dist/misty"; fi
+          if [ "$RUNNER_OS" = "macOS" ]; then LAUNCHER="sh"; fi
           "$BIN" --version
           cmake -S . -B build-portable -DMISTY_ASCII_BUILD_CLI=OFF -DMISTY_ASCII_BUILD_TESTS=ON \
-            -DMISTY_ASCII_TEST_BINARY="$BIN"
+            -DMISTY_ASCII_TEST_BINARY="$BIN" -DMISTY_ASCII_TEST_LAUNCHER="$LAUNCHER"
           cmake --build build-portable --config Release
           ctest --test-dir build-portable -C Release --output-on-failure

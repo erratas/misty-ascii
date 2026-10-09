@@ -11,7 +11,7 @@ unset(ENV{NO_COLOR})
 unset(ENV{FORCE_COLOR})
 unset(ENV{COLORTERM})
 execute_process(
-  COMMAND "${MISTY}" ${arglist}
+  COMMAND ${LAUNCHER} "${MISTY}" ${arglist}
   ${in_args}
   OUTPUT_VARIABLE out
   ERROR_VARIABLE err

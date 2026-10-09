@@ -36,5 +36,8 @@ Contract for callers (Go, Node, Python, shell): art on stdout, errors on stderr,
 (auto honours `NO_COLOR`, `FORCE_COLOR`, `COLORTERM` and is off when piped), `--ascii` for
 plain 7-bit output, `--width N` else `$COLUMNS`, the terminal, or 80.
 
+macOS: start the binary through a shell (`sh misty table ...`) when calling it from Go, Node or
+anything using `posix_spawn()`; interactive shells already do this.
+
 Use as a CMake subproject: `add_subdirectory(misty-ascii)` then link `misty::ascii`
 (the CLI and tests are off by default in that case).
