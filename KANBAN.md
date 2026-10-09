@@ -36,6 +36,10 @@ Last updated: 2026-10-09 by Claude Code (cloud session "engine-core", after "det
   Misty Control buttons that call the route, `status_report`/`doctor_report` charts, the
   standalone Misty Control page (`_BRIDGE/MISTY-ONE`, not in git), Venus install, the other
   CLIs, MCP `canvas_write` (C1).
+- `H0` **Hermes CLI plan: animated, colourful, themed, update-safe** (misty-ascii,
+  [`docs/hermes/PLAN.md`](docs/hermes/PLAN.md), erratas/misty-ascii#4). Owner decisions
+  2026-10-10: full fork `erratas/hermes-agent`, max motion with a calm switch, themes + loading
+  animations first. Cards H1-H9 in the plan. Waiting on owner review and the plan's open questions.
 
 ## Next (in order)
 
@@ -103,3 +107,7 @@ One line per session, newest last: `date | who | what changed | what failed | wh
   Python subprocess cannot exec APE on Linux/macOS (helper retries via sh); E15 VM has no
   GitHub creds for private misty-os (moved the commit with a git bundle) | GUI panel, Misty
   Control buttons, Venus.
+- 2026-10-10 | Claude Code cloud (engine-core) | H0 Hermes plan written (full fork, curated
+  main, tested weekly syncs; `hermes update` already keeps a fork's own commits) | Graphify
+  refresh on E15 failed once on a cp437 encoding error (retried with UTF-8); groundwork plugin
+  blocked edits until the owner's bypass | owner reviews the plan, then H1 fork setup.
